@@ -3,17 +3,33 @@ import dotenv from 'dotenv';
 import connectDB from "./config/key.js";
 import authRoute from "./routes/authRoutes.js";
 import custRoute from "./routes/api/customerRoute.js"
+import verifyJwt from "./middlewares/verifyJWT.js"
+import cookieParser from "cookie-parser";
+import { logger } from "./middlewares/logEvents.js";
+import { credentials } from "./middlewares/credentials.js";
+import cors from "cors"
+import { corsOptions } from "./config/corsOptions.js";
 
 const app = express();
-
 dotenv.config();
 connectDB();
 
-app.use(express.json());
+
+//custom middleware
+app.use(logger)
+
+//handles opions credentials check/cors!
+//fetch cookie credentials
+app.use(credentials);
+
+//cross origin resouce sharing
+app.use(cors(corsOptions));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+//cookies middlewares
+app.use(cookieParser())
 
 const PORT = process.env.PORT;
-console.log(PORT);
 
 app.get("/", (req, res) => {
     res.json({
@@ -23,6 +39,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRoute);
+// verify api Route
+app.use(verifyJwt);
 app.use("/api", custRoute);
 
 app.listen(PORT, () => {

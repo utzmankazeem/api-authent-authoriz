@@ -69,15 +69,55 @@ export const login = async (req, res) => {
     }
 }
 
-// const secrets = async (req, res) => {
-//     if(req.isAuthenticated()){
-//         res.render("secrets");
-//     } else {
-//         res.redirect('/login');
-//     }
-// }
+export const refreshToken = async (req, res) => {
+    const cookies = req.cookies
+    if(!cookies?.jwt) return res.sendStatus(401);//unauthorized
+    const refreshToken = cookies.jwt;
+   
+    const foundData = await Cust.findOne({refreshToken});
+    if (!foundData) return res.sendStatus(403);//forbidden
+    //evaluate jwt
+    jwt.verify(
+        refreshToken,
+        process.env.REFRESH_TOKEN_SECRET,
+        (err, decoded) => {
+            if (err || foundData.username !== decoded.username) 
+            return res.sendStatus(403);//forbidden
+            console.log(err);
+            const category = Object.values(foundData.category)
+            const accessToken = jwt.sign(
+                { "UserInfo":{
+                    "username": foundData.username,
+                    "category": category
+                }
+            },
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: '30s' }
+            );
+            res.json({ accessToken })
+        }
+    );
+}
 
-// const logout = async (req, res) => {
-//         req.logout();
-//         res.redirect('/')
-//  }
+export const logout = async (req, res) => {
+    //delete accessToken from client
+    const cookies = req.cookies;
+    if(!cookies?.jwt) return res.sendStatus(204); //No content
+    const refreshToken = cookies.jwt;
+    
+    //check db for duplicates
+    const foundUser = await Cust.findOne({refreshToken}).exec();
+    if (!foundUser) {
+        res.clearCookie('jwt', {httpOnly: true, sameSite: 'None', secure: true}); //allowedOrigin Access
+        res.sendStatus(204); //No content
+    }
+
+    //Delete from db
+    foundUser.refreshToken = '';
+    const result = await foundUser.save();
+    console.log(result);
+
+    res.clearCookie('jwt',  { httpOnly: true, sameSite: 'None', secure: true }); //secure true serves on https only
+    res.sendStatus(204);//No content
+}
+
