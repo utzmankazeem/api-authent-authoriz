@@ -3,7 +3,7 @@ import Cust from '../model/User.js'
 export const getData = async (req, res) => {
     const customer = await Cust.find();
     if (!customer) return res.status(204).json({ 'message': 'No customer found'});
-    return res.status(200).json({ success: true, message: "success", customer});
+    return res.status(200).json({message: "success", customer});
 }
 
 export const createData = async (req, res) => {
@@ -40,7 +40,7 @@ export const deleteData = async (req, res) => {
     if(!customer) {
         return res.status(404).json({'message': `customer matches ID ${req.params.id} not found`})
     }
-    const result = await Cust.deleteOne(customer);
+    const result = await Cust.deleteOne({_id: customer});
     return res.status(201).json({ 'message': `customer deleted`});;
 }
 
@@ -49,7 +49,7 @@ export const getAdata = async (req, res) => {
     
     const customer = await Cust.findOne({_id: req.params.id}).exec();
     if(!customer) {
-        return res.status(204).json({'message': `customer matches ID ${req.params.id}found`})
+        return res.status(204).json({'message': `no customer ID: ${req.params.id} found`})
     }
     return res.status(201).json({ 'message': customer});
 }

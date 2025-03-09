@@ -27,13 +27,15 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
     const { username, pass } = req.body;
     if(!username || !pass) return res.status(400).json({'message': 'require user and password'});
-    
+    try{
     //check d for duplicates user & pass
     const customer = await Cust.findOne({username});
-    if (!customer) return res.sendStatus(401); //unauthorized
+    if (!customer) return res.sendStatus(401);//unauthorized
     //evaluate pass
     const match = await bcrypt.compare(pass, customer.pass);
-    if(match){
+    if (!match) {
+        return res.status(401).json({ message: 'Invalid email or password' });
+    }
         const category = Object.values(customer.category).filter(Boolean); 
         // create JWT..before we logged user In
         const accessToken = jwt.sign(
@@ -64,7 +66,7 @@ export const login = async (req, res) => {
             //Secure: 'true', //add in production
             maxAge: 24 * 60 * 60 * 1000}); //allowedOrigin Access
         res.json({ category, accessToken });
-    } else {
+    } catch (err) {
         res.sendStatus(401);
     }
 }

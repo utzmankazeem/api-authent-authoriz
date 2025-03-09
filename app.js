@@ -1,5 +1,6 @@
-import express from "express";
 import dotenv from 'dotenv';
+dotenv.config();
+import express from "express";
 import connectDB from "./config/key.js";
 import authRoute from "./routes/authRoutes.js";
 import custRoute from "./routes/api/customerRoute.js"
@@ -11,9 +12,7 @@ import cors from "cors"
 import { corsOptions } from "./config/corsOptions.js";
 
 const app = express();
-dotenv.config();
 connectDB();
-
 
 //custom middleware
 app.use(logger)
@@ -24,8 +23,10 @@ app.use(credentials);
 
 //cross origin resouce sharing
 app.use(cors(corsOptions));
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 //cookies middlewares
 app.use(cookieParser())
 
@@ -39,7 +40,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/auth", authRoute);
-// verify api Route
+// verify api Route with jwt token
 app.use(verifyJwt);
 app.use("/api", custRoute);
 

@@ -7,17 +7,23 @@ const custSchema = new mongoose.Schema({
     },
     category: {
         User:{
-        type: Number,
-        default: 2100
+            type:Number,
+            // default: 2100
+            },     
+        Admin: {
+            type:Number,
+            default: 2300
         },
-        Admin: Number,
-        Editor: Number
-    },
+        Editor:{
+            type:Number,
+            // default: 2200
+            },
+    },   
     pass: {
         type: String,
         required: true
     },
     refreshToken: String
-});
+})
 
 export default mongoose.model("Cust", custSchema);
