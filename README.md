@@ -1,76 +1,98 @@
-JWT.IO
-# Secure Nodejs App
-mongoose encryption
-npm i md5
+# Rest api
 
-This project was created with [Node js App]
-## Available Scripts
+Customer API
 
-In the project directory, you can run:
+This is a Customer API built with Node.js and Express. It includes various features such as authentication, JWT verification, and error handling.
 
-### `npm start`
+## Table of Contents
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Installation
+- Usage
+- Routes
+- Middleware
+- Configuration
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Installation
 
-### `.env`
+1. Clone the repository:
+    ```sh
+    git clone <https://github.com/utzmankazeem/api-authent-authoriz.git>
+    ```
+2. Navigate to the project directory:
+    ```sh
+    cd api-authent-authoriz
+    ```
+3. Install the dependencies:
+    ```sh
+    npm install
+    ```
+4. Create a .env file in the root directory and add your environment variables:
+    ```env
+    PORT=2000
+    DB_URI=<your_mongodb_connection_string>
+    ACCESS_TOKEN_SECRET=<your_token_secret>
+    REFRESH_TOKEN_SECRET=<your_refresh_secret_key>
+    ```
 
-This secures all my App keys the watch mode.\
-See the section about [running security](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Usage
 
-### `npm run build`
+1. Start the server:
+    ```sh
+    npm start
+    ```
+2. The local server will be running at `http://localhost:2000`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Routes
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- `GET /` - Returns the app information.
+- `POST /auth` - Handles user authentication.
+- `GET /api` - Protected route that requires JWT verification.
 
-<!-- Oauth 
-goto passportjs.org / find strategy(passport-google-oauth20)
-follow docs!
-1. npm i passport-google-oauth20
-2. create app in GoogleDevCredencials
-newProj {just Name} 
-setup credentials -> consent screen
-   {appName,logo,apiScopes(leave Default. can add more) }
-after appHosting you can add domain etc.
-save & create cred -> create Oauth client ID {
-    App Typee: web App,
-    Name: App Name
-    authOrigin: use your localhost address, pending proper host
-    authRedirect: localhost/auth/google/secret
-}
-now Create...
-youd get an Id & Secret
-copy both into your .env file {
-    CLIENT_ID =
-    CLIENT_SECRET = 
-}
-3. req GoogleSttrategy package in your code {
-    GoogleSttrategy = require('passport-google-oauth20').strategy
-}
-take the strategy code put into model under serializers
-change {
-    clientId: process.env. CLIENT_ID,
-    ClientSecret: process.env. CLIENT_Secret,
-    cbUrl: "(authRedirect) goto the oauth page to copy it",
-    userProfileUrl: "https://www.googleapis.com/oauth2/v3/userinfo"    
-    },
 
-  4.  npm i mongoose-findorcreate
-      require in model & add as plugin {
-        secSchema.plugin(findOrCreate);
-        }
+## Middleware
 
-5. download Social button for bootstrap(lipis.github.io/bs)
-    download extract -> bs-sc-css into public/css
-    link into the header.html 
+- `logger` - Logs request details.
+- `credentials` - Handles credentials check and CORS.
+- `cors` - Enables Cross-Origin Resource Sharing.
+- `express.urlencoded` - Parses URL-encoded bodies.
+- `express.json` - Parses JSON bodies.
+- `cookieParser` - Parses cookies.
+- `verifyJwt` - Verifies JWT tokens for protected routes.
+- `errorHandler` - Handles errors.
 
-//Task Passport login with FB
- -->
+## Configuration
+
+- key.js - Contains the database connection logic.
+- corsOptions.js - Contains the CORS configuration.
+
+```ts
+    code to use :ES 14,  ES module
+    functions : async/await
+    proper usage of: try/catch in async code block
+    Authorization: cookies and middlewares
+    using Node : version 18.2.0 
+```
+
+## Technology Stack
+
+api: Node.js, Express.js
+
+Database: MongoDB
+
+Authentication: jsonwebtoken
+
+Authorization: cookies
+
+Deployment: AWS
+
+
+
+#Javascript
+#JWT
+#Cookies
+#Nodejs
+#api
+#MongoDB
+#MVCS
+#Middlewares

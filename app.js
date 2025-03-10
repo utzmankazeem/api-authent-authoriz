@@ -7,6 +7,7 @@ import custRoute from "./routes/api/customerRoute.js"
 import verifyJwt from "./middlewares/verifyJWT.js"
 import cookieParser from "cookie-parser";
 import { logger } from "./middlewares/logEvents.js";
+import errorHandler from "./middlewares/errorHandler.js"
 import { credentials } from "./middlewares/credentials.js";
 import cors from "cors"
 import { corsOptions } from "./config/corsOptions.js";
@@ -43,6 +44,9 @@ app.use("/auth", authRoute);
 // verify api Route with jwt token
 app.use(verifyJwt);
 app.use("/api", custRoute);
+
+//custom Middleware
+app.use(errorHandler)
 
 app.listen(PORT, () => {
     console.log(`Server running at http://localhost:${PORT}`);
